@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang en>
+    <head>
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Exercise Project</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <header>
+            <h1>Let the machine guess your age and gender</h1>
+        </header>
+        <div id="webcam_with_polaroid">
+            <canvas id="canvas"> </canvas>
+            <button class='buttons' id="classifyButton">...</button>
+            <button class='buttons' id="startButton">Start The Video Feed</button>
+        </div>
+        <video id="webcam" autplay="true"> </video>
+        <!--
+        <button id="classifyButton">Classify</button>
+        <button id="startCameraFeedButton">Start The Video Feed</button>
+        -->
+        <script src="{{url_for('static', filename='web.js')}}"></script>
+    </body>
+</html>
