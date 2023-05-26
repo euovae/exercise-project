@@ -72,7 +72,39 @@ def detect_and_crop(image):
         return None
 
 # Numerical to categorical 
+def gender_match(gender):
+    if (gender == 0):
+        return "Male"
+    elif (gender == 1):
+        return "Female"
+    else:
+        return 0
+    
+def age_match(age):
+    if (age == 0):
+        return "0-3"
+    elif (age == 1):
+        return "4-8"
+    elif (age == 2):
+        return "9-12"
+    elif (age == 3):
+        return "13-17"
+    elif (age == 4):
+        return "18-25"
+    elif (age == 5):
+        return "26-35"
+    elif (age == 6):
+        return "36-45"
+    elif (age == 7):
+        return "46-55"
+    elif (age == 8):
+        return "56-65"
+    elif (age == 9):
+        return "65+"
+    else:
+        return 0
 
+'''
 def gender_match(gender):
     match gender:
         case 0:
@@ -106,3 +138,4 @@ def age_match(age):
             return "65+"
         case _:
             return 0
+'''
