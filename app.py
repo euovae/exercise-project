@@ -5,9 +5,6 @@ import io
 from PIL import Image
 from classification import start_classification, start_bbox_detection
 
-# Set-ExecutionPolicy Unrestricted -Scope Process
-# env\Scripts\activate
-
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.disabled = True
@@ -47,7 +44,7 @@ def receiveBBox():
 def receiveClassification():
     # requesting a FormData object with an image
     encoded_image = request.form.get('image')
-    # Removing the unneccesary header and decoding the received image
+    # Removing the unnecesary header and decoding the received image
     decoded_image = base64.b64decode(encoded_image.replace("data:image/png;base64,",""))
     # Reading the bytes and opening the image using PIL
     bin_stream = io.BytesIO(decoded_image)

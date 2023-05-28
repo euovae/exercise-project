@@ -2,9 +2,6 @@ import cv2 as cv
 import numpy as np
 import tensorflow as tf
 
-# Set-ExecutionPolicy Unrestricted -Scope Process
-# env\Scripts\activate
-
 # Loading up the cascadeclassifier for detecting the bounding boxes of faces.
 face_cc = cv.CascadeClassifier('./static/haarcascade_frontalface_default.xml')
 

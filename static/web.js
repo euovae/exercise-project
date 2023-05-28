@@ -228,15 +228,23 @@ function init() {
             // Extract and draw frames onto canvas and send them to the server.
             .then((stream) => {  
                 localStream = stream;
+                // Get the user's camera and play it through a <video> element.
                 canvasAndCamHandler.getCamera().srcObject = localStream;
                 canvasAndCamHandler.getCamera().addEventListener("loadedmetadata", () => {
                     canvasAndCamHandler.getCamera().play();
                 })
+                // Extract a frame from the <video> element at 24fps
+                // and draw it onto the canvas.
                 canvasUpdater.start();
+
+                // Extract a frame from the <canvas> element at 1 fps
+                // and send it to the server to receive a bounding box.
                 frameExtraction.start();
 
+                // Enable classification.
                 buttonHandler.enableClfBTN("Classify")
                 buttonHandler.enableStartBTN("Stop The Camera Feed")
+
                 canvasAndCamHandler.setCameraFeed(true);
             
             }).catch((e) => {
@@ -271,14 +279,16 @@ function init() {
     buttonHandler.getClfBTN().onclick = function() {
     
         if (!buttonHandler.getClfResetState()) {
+            // Let the user classify the image only if bounding boxes are detected.
             if (bBoxHandler.getBBoxFound()){
 
                 // Grabbing the current frame from the canvas element
                 // and encoding it into a base64 format through Data URLs.
                 let data = canvasAndCamHandler.getCanvas().toDataURL('image/png');
                 let formData = new FormData();
-
                 formData.append('image', data)
+
+                // Send the image to the server via a fetch() request.
                 sendImageForClassification(formData);
                 buttonHandler.disableClfBTN();
             } else {
@@ -314,7 +324,7 @@ function init() {
     }
 
     // Sending a frame and
-    // requesting the age and gender prediction for it from the server
+    // requesting the age and gender predictions from the server
     async function sendImageForClassification(formData) {
         await fetch('/classify', 
         {
