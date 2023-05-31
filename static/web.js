@@ -180,10 +180,12 @@ function init() {
             webcamFeed = canvasAndCamHandler.getCamera();
             canvas = canvasAndCamHandler.getCanvas();
 
-            let mn = Math.min(webcamFeed.videoWidth, webcamFeed.videoHeight);
-            let mx = Math.max(webcamFeed.videoWidth, webcamFeed.videoHeight);
+            //let mn = Math.min(webcamFeed.videoWidth, webcamFeed.videoHeight);
+            //let mx = Math.max(webcamFeed.videoWidth, webcamFeed.videoHeight);
+            //canvas.width = canvas.height = mn;
 
-            canvas.width = canvas.height = mn;
+            canvas.width = webcamFeed.videoWidth;
+            canvas.height = webcamFeed.videoHeight;
             canvas.getContext('2d').drawImage(webcamFeed, 
                 0, 0,
                 canvas.width, canvas.height,

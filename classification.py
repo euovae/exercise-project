@@ -11,15 +11,20 @@ age_model = tf.keras.models.load_model('age_model', compile=True)
 
 # Function for starting up the classification process
 def start_classification(im):
-    return classify_face(detect_and_crop(pil_to_opencv(im)))
+    return classify_face(detect_and_crop(*pil_to_opencv(im, True)))
 
 # Function for starting up the face detection process
 def start_bbox_detection(im):
-    return detect_bbox(pil_to_opencv(im), False)
+    return detect_bbox(pil_to_opencv(im, False), False)
 
 # Converting pil to opencv
-def pil_to_opencv(pil_im):
-    return cv.cvtColor(np.array(pil_im), cv.COLOR_RGB2BGR)
+def pil_to_opencv(pil_im, return_min_dim):
+    #print(pil_im.format)
+    #print(pil_im.size)
+    #print(pil_im.mode)
+    min_dim = min(pil_im.size)
+    img = cv.cvtColor(np.asarray(pil_im), cv.COLOR_RGB2BGR)
+    return (img, min_dim) if return_min_dim else img
 
 # Preprocessing the images to have the exact same shape as the training examples.
 def preprocess_image(image):
@@ -30,7 +35,7 @@ def classify_face(image):
     if image is None:
         return None
     else:
-        #cv.imwrite('image.png', image)
+        #cv.imwrite('image', image)
         # Converting a numpy array to tensor. Not needed.
         prepped_image = tf.convert_to_tensor(preprocess_image(np.array(image)))
         
@@ -53,8 +58,9 @@ def detect_bbox(image, return_gray):
     return (faces_bbox, image_gray) if return_gray else faces_bbox
 
 # Drawing the bounding boxes and cropping the image.
-def detect_and_crop(image):
-    
+def detect_and_crop(im, min_dim):
+    # Resizing the images into a square, which resulted in better accuracy.
+    image = cv.resize(im, (min_dim, min_dim), interpolation = cv.INTER_AREA)
     # Obtaining the bounding boxes
     faces_bbox, image_gray = detect_bbox(image, True)
     
@@ -63,12 +69,16 @@ def detect_and_crop(image):
         cv.rectangle(image, (x, y), (x+w, y+h), (255, 255, 255), thickness=1)
     try:
         # Cropping and downsampling to (48, 48)
+        #cv.imwrite('image_bbox', image)
         cropped_image = image_gray[y:y+h, x:x+w]
         return (cv.resize(cropped_image, dsize=[48,48], interpolation = cv.INTER_AREA))
     except UnboundLocalError:
         return None
 
+
 # Numerical to categorical 
+
+# Python version < 3.10
 def gender_match(gender):
     if (gender == 0):
         return "Male"
@@ -76,7 +86,8 @@ def gender_match(gender):
         return "Female"
     else:
         return 0
-    
+
+# Python version < 3.10
 def age_match(age):
     if (age == 0):
         return "0-3"
@@ -102,6 +113,7 @@ def age_match(age):
         return 0
 
 '''
+# Python version >= 3.10
 def gender_match(gender):
     match gender:
         case 0:
@@ -110,7 +122,8 @@ def gender_match(gender):
             return "Female"
         case _:
             return 0
-        
+
+# Python version >= 3.10
 def age_match(age):
     match age:
         case 0:
